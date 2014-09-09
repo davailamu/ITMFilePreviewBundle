@@ -8,3 +8,8 @@
     width:                      300px;
     float:                      left;
 }
+
+.itm_file_separator
+{
+    clear: both;
+}
