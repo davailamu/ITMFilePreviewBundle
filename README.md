@@ -6,11 +6,11 @@ desciption
 Installing
 ----------------------------------
 
-First you need to add `braincrafted/bootstrap-bundle` to `composer.json`:
+First you need to add `itm/file-preview-bundle` to `composer.json`:
 
 	{
 		"require": {
-        	"braincrafted/bootstrap-bundle": "dev-master"
+        	"itm/file-preview-bundle": "dev-master"
 		}
 	}
 	
