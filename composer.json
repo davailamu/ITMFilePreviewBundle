@@ -1,0 +1,20 @@
+{
+    "name": "itm/file-preview-bundle",
+    "description": "Bundle for upload files",
+    "type" : "symfony-bundle",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Samusevich Alexander",
+            "email": "aleksandeer.samusevich@itmhouse.com"
+        },
+        {
+            "name": "Alexei Yanochkin",
+            "email": "alexei.yanochkin@itmhouse.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": { "ITM\\FilePreviewBundle\\": "" }
+    }
+}

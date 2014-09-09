@@ -1,0 +1,16 @@
+services:
+   itm.file.preview.subscriber:
+      class: ITM\ImagePreviewBundle\EventListener\FileSubscriber
+      arguments: [@service_container]
+      tags:
+          - { name: doctrine.event_subscriber }
+
+   itm.file.preview.path.resolver:
+       class: ITM\ImagePreviewBundle\Resolver\PathResolver
+       arguments: [@service_container]
+
+   itm.file.preview.form_file_type:
+       class: ITM\ImagePreviewBundle\Form\Type\FilePreviewType
+       arguments: [@service_container]
+       tags:
+           - { name: form.type, alias: itm_file_preview }
