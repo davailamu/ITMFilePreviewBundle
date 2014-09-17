@@ -8,7 +8,7 @@ Installing
 
 First you need to add `itm/file-preview-bundle` to `composer.json`:
 
-	{
+    {
 		"require": {
         	"itm/file-preview-bundle": "dev-master"
 		}
@@ -21,8 +21,8 @@ First you need to add `itm/file-preview-bundle` to `composer.json`:
 
 Configuration
 -------------------------------------
-
-1. Add File preview bundle configurations in `config.yml`
+<ol>
+<li>Add File preview bundle configurations in `config.yml`</li>
 
 ```
     itm_file_preview:
@@ -34,7 +34,7 @@ Configuration
                     attachment: ~ # Entity field which upload file
 ```
 
-2. Add to twig configuration fields templates in `config.yml`
+<li>Add to twig configuration fields templates in `config.yml`</li>
 
 ```
     twig:
@@ -43,16 +43,17 @@ Configuration
                 - 'ITMFilePreviewBundle:Form:fields.html.twig'
 ```
 
-3. Add in `AppKernel.php`
+<li>Add in `AppKernel.php`</li>
 
 ```
     new ITM\FilePreviewBundle\ITMFilePreviewBundle(),
 ```
 
-4. Set in Admin Class `itm_file_preview` type
+<li>Set in Admin Class `itm_file_preview` type</li>
 
 ```
     ->add('attachment', 'itm_file_preview');
 ```
 
 Enjoy!
+======
