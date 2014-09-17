@@ -8,7 +8,7 @@
     },
     "repositories": [{
         "type": "vcs",
-        "url": "http://gitlab.itmclient.com/symfony-bundles/itmfilepreviewbundle.git"
+        "url": "https://github.com/loonkwil/filesize-extension-bundle.git"
     }],
     "authors": [
         {
