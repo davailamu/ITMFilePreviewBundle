@@ -21,8 +21,8 @@ First you need to add `itm/file-preview-bundle` to `composer.json`:
 
 Configuration
 -------------------------------------
-<ol>
-<li>Add File preview bundle configurations in `config.yml`</li>
+
+Add File preview bundle configurations in `config.yml`
 
 ```
     itm_file_preview:
@@ -34,7 +34,7 @@ Configuration
                     attachment: ~ # Entity field which upload file
 ```
 
-<li>Add to twig configuration fields templates in `config.yml`</li>
+Add to twig configuration fields templates in `config.yml`
 
 ```
     twig:
@@ -43,13 +43,13 @@ Configuration
                 - 'ITMFilePreviewBundle:Form:fields.html.twig'
 ```
 
-<li>Add in `AppKernel.php`</li>
+Add in `AppKernel.php`
 
 ```
     new ITM\FilePreviewBundle\ITMFilePreviewBundle(),
 ```
 
-<li>Set in Admin Class `itm_file_preview` type</li>
+Set in Admin Class `itm_file_preview` type
 
 ```
     ->add('attachment', 'itm_file_preview');
