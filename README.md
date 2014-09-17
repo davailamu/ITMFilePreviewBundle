@@ -25,6 +25,8 @@ Configuration
 Add File preview bundle configurations in `config.yml`
 
 ```
+    # app/config/config.yml
+
     itm_file_preview:
         upload_path: # Upload path in web folder for example uploads
         upload_url:  # Url access to upload folder
@@ -37,6 +39,8 @@ Add File preview bundle configurations in `config.yml`
 Add to twig configuration fields templates in `config.yml`
 
 ```
+    # app/config/config.yml
+
     twig:
         form:
             resources:
@@ -46,13 +50,34 @@ Add to twig configuration fields templates in `config.yml`
 Add in `AppKernel.php`
 
 ```
-    new ITM\FilePreviewBundle\ITMFilePreviewBundle(),
+    <?php
+    // app/AppKernel.php
+
+    public function registerBundles()
+    {
+        $bundles = array(
+            // ...
+            new ITM\FilePreviewBundle\ITMFilePreviewBundle(),
+        );
+    }
 ```
 
 Set in Admin Class `itm_file_preview` type
 
 ```
-    ->add('attachment', 'itm_file_preview');
+    <?php
+    // src/ITM/NewsBundle/Admin/NewsAdmin.php
+
+    class NewsAdmin extends Admin
+    {
+        // ...
+        protected function configureFormFields(FormMapper $formMapper)
+        {
+            // ...
+            $formMapper->add('attachment', 'itm_file_preview');
+            // ...
+        }
+    }
 ```
 
 Enjoy!
