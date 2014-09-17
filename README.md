@@ -1,7 +1,7 @@
 ITM File Preview Bundle
 ========================
 
-desciption
+Bundle for upload files for SonataAdmin
 
 Installing
 ----------------------------------
