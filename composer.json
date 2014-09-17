@@ -3,6 +3,9 @@
     "description": "Bundle for upload files",
     "type" : "symfony-bundle",
     "license": "proprietary",
+    "require": {
+        "spe/filesize-extension-bundle": "dev-master"
+    },
     "authors": [
         {
             "name": "Samusevich Alexander",
