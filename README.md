@@ -62,7 +62,7 @@ Add in `AppKernel.php`
     }
 ```
 
-Set in Admin Class `itm_file_preview` type
+Add type in form. For example, if you use SonataAdminBundle, set in Admin class `itm_file_preview` type for entity field
 
 ```
     <?php
