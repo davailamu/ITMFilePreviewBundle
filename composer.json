@@ -3,13 +3,6 @@
     "description": "Bundle for upload files",
     "type" : "symfony-bundle",
     "license": "proprietary",
-    "require": {
-        "spe/filesize-extension-bundle": "dev-master"
-    },
-    "repositories": [{
-        "type": "vcs",
-        "url": "https://github.com/loonkwil/filesize-extension-bundle.git"
-    }],
     "authors": [
         {
             "name": "Samusevich Alexander",
