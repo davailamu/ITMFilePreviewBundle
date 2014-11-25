@@ -16,16 +16,22 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Doctrine\Common\Annotations\AnnotationReader;
+use ITM\FilePreviewBundle\Annotations\FilePreview;
 
 class FileSubscriber implements EventSubscriber
 {
+    const ANNOTATION_FILEPREVIEW = "\ITM\FilePreviewBundle\Annotations\FilePreview";
+
     private $container;
     private $config;
     private $files = [];
     private $oldFiles = [];
+    private $reader;
 
     public function __construct(ContainerInterface $container)
     {
+        $this->reader = new AnnotationReader();
         $this->container = $container;
         $this->config = $this->container->getParameter('ITMFilePreviewBundleConfiguration');
     }
@@ -62,27 +68,22 @@ class FileSubscriber implements EventSubscriber
         $accessor = PropertyAccess::createPropertyAccessor();
         $curEntity = $args->getEntity();
 
-        //@todo Нужно переработать формат настройки конфигурации чтобы убрать лишние уровни
-        foreach( $this->config['entities'] as $bundleName => $bundle )
-        {
-            foreach( $bundle['bundle'] as $entityName => $entity )
-            {
+        $reflectionProperties = new \ReflectionClass($curEntity);
+        $properties = $reflectionProperties->getProperties();
+        foreach ($properties as $propertie) {
+            $annotation = $this->reader->getPropertyAnnotation($propertie, self::ANNOTATION_FILEPREVIEW);
+            if (isset($annotation)) {
                 $entityClass = get_class($curEntity);
-                // Проверяем принадлежит ли сущность тому же бандлу и классу, что и описанная в конфигурации
-                if( $entityClass == $doctrine->getAliasNamespace($bundleName).'\\'. $entityName)
+                $fieldName = $propertie->getName();
+                // Получаем имя файла и сохраняем в subscriber
+                $filename = $accessor->getValue( $curEntity, $fieldName );
+                if($filename)
                 {
-                    foreach( $entity['entity'] as $fieldName => $field )
-                    {
-                        // Получаем имя файла и сохраняем в subscriber
-                        $filename = $accessor->getValue( $curEntity, $fieldName );
-                        if($filename)
-                        {
-                            $this->oldFiles[$entityClass][$fieldName] = $filename;
-                        }
-                    }
+                    $this->oldFiles[$entityClass][$fieldName] = $filename;
                 }
             }
         }
+
     }
 
     /**
@@ -96,36 +97,28 @@ class FileSubscriber implements EventSubscriber
         $accessor = PropertyAccess::createPropertyAccessor();
         $curEntity = $args->getEntity();
 
-        $fs = new Filesystem();
-        $pathResolver = $this->container->get('itm.file.preview.path.resolver');
-
-        // Обходим объявленные в конфигурации сущности
-        foreach( $this->config['entities'] as $bundleName => $bundle )
-        {
-            foreach( $bundle['bundle'] as $entityName => $entity )
-            {
+        $reflectionProperties = new \ReflectionClass($curEntity);
+        $properties = $reflectionProperties->getProperties();
+        foreach ($properties as $propertie) {
+            $annotation = $this->reader->getPropertyAnnotation($propertie, self::ANNOTATION_FILEPREVIEW);
+            if (isset($annotation)) {
+                // Получаем загруженный файл и сохраняем в subscriber
                 $entityClass = get_class($curEntity);
-                // Проверяем принадлежит ли сущность тому же бандлу и классу, что и описанная в конфигурации
-                if( $entityClass == $doctrine->getAliasNamespace($bundleName).'\\'. $entityName)
-                {
-                    foreach( $entity['entity'] as $fieldName => $field )
-                    {
-                        // Получаем загруженный файл и сохраняем в subscriber
-                        $file = $accessor->getValue( $curEntity, $fieldName );
-                        if( $file instanceof UploadedFile )
-                        {
-                            $this->files[$entityClass][$fieldName] = $file;
+                $fieldName = $propertie->getName();
 
-                            // Генерируем уникальное имя для загруженного файла
-                            $filename = sha1(uniqid(mt_rand(), true)) . '.' . $file->guessExtension();
-                            $accessor->setValue( $curEntity, $fieldName, $filename );
-                        }
-                        elseif(!empty($this->oldFiles[$entityClass][$fieldName]))
-                        {
-                            // Сохраняем старое имя файла
-                            $accessor->setValue( $curEntity, $fieldName, $this->oldFiles[$entityClass][$fieldName] );
-                        }
-                    }
+                $file = $accessor->getValue( $curEntity, $propertie->getName() );
+                if( $file instanceof UploadedFile )
+                {
+                    $this->files[$entityClass][$fieldName] = $file;
+
+                    // Генерируем уникальное имя для загруженного файла
+                    $filename = sha1(uniqid(mt_rand(), true)) . '.' . $file->getClientOriginalExtension();
+                    $accessor->setValue( $curEntity, $fieldName, $filename );
+                }
+                elseif(!empty($this->oldFiles[$entityClass][$fieldName]))
+                {
+                    // Сохраняем старое имя файла
+                    $accessor->setValue( $curEntity, $fieldName, $this->oldFiles[$entityClass][$fieldName] );
                 }
             }
         }
@@ -183,4 +176,4 @@ class FileSubscriber implements EventSubscriber
             }
         }
     }
-} 
+}
