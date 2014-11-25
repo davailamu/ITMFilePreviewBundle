@@ -96,9 +96,6 @@ class FileSubscriber implements EventSubscriber
         $accessor = PropertyAccess::createPropertyAccessor();
         $curEntity = $args->getEntity();
 
-        $fs = new Filesystem();
-        $pathResolver = $this->container->get('itm.file.preview.path.resolver');
-
         // Обходим объявленные в конфигурации сущности
         foreach( $this->config['entities'] as $bundleName => $bundle )
         {
@@ -114,7 +111,7 @@ class FileSubscriber implements EventSubscriber
                         $file = $accessor->getValue( $curEntity, $fieldName );
                         if( $file instanceof UploadedFile )
                         {
-                            $this->files[$entityClass][$fieldName] = $file;
+                            $this->files[$entityClass][] = [$fieldName => $file, 'entity' => $curEntity];
 
                             // Генерируем уникальное имя для загруженного файла
                             $filename = sha1(uniqid(mt_rand(), true)) . '.' . $file->guessExtension();
@@ -166,19 +163,24 @@ class FileSubscriber implements EventSubscriber
             echo "An error occurred while creating your directory at ".$e->getPath();
         }
 
-        $files = $this->files[get_class($curEntity)];
-        foreach( $files as $field => $file )
+        $entities = $this->files[get_class($curEntity)];
+        foreach( $entities as $files )
         {
-            if( $file instanceof UploadedFile )
-            {
-                // Копируем загруженный файл в хранилище
-                $fs->copy( $file->getPathname(), $pathResolver->getPath($curEntity, $field) );
+            $entity = $files['entity'];
+            if($entity !== $curEntity) continue;
+            unset($files['entity']);
 
-                // Удаляем старый файл
-                if( !empty($this->oldFiles[get_class($curEntity)][$field]) )
-                {
-                    $oldFilePath = $pathResolver->getPath( $curEntity, $this->oldFiles[get_class($curEntity)][$field] );
-                    if( $fs->exists($oldFilePath) ) $fs->remove( $oldFilePath );
+            foreach( $files as $field => $file )
+            {
+                if ($file instanceof UploadedFile) {
+                    // Копируем загруженный файл в хранилище
+                    $fs->copy($file->getPathname(), $pathResolver->getPath($curEntity, $field));
+
+                    // Удаляем старый файл
+                    if (!empty($this->oldFiles[get_class($curEntity)][$field])) {
+                        $oldFilePath = $pathResolver->getPath($curEntity, $this->oldFiles[get_class($curEntity)][$field]);
+                        if ($fs->exists($oldFilePath)) $fs->remove($oldFilePath);
+                    }
                 }
             }
         }

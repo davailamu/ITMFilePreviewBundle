@@ -53,7 +53,7 @@ class PathResolver
     public function getPath($entity, $field, $relative = false)
     {
         $accessor = PropertyAccess::createPropertyAccessor();
-        // Если не удается получить доступ к такому свйоству, то считаем что это имя файла
+        // Если не удается получить доступ к такому свойству, то считаем что это имя файла
         if($accessor->isReadable( $entity, $field ))
         {
             $field = $accessor->getValue($entity, $field);
