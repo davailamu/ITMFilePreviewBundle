@@ -114,7 +114,7 @@ class FileSubscriber implements EventSubscriber
                         $file = $accessor->getValue( $curEntity, $fieldName );
                         if( $file instanceof UploadedFile )
                         {
-                            $this->files[$entityClass][$fieldName] = $file;
+                            $this->files[spl_object_hash($curEntity)][$fieldName] = $file;
 
                             // Генерируем уникальное имя для загруженного файла
                             $filename = sha1(uniqid(mt_rand(), true)) . '.' . $file->guessExtension();
@@ -151,7 +151,7 @@ class FileSubscriber implements EventSubscriber
         $curEntity = $args->getEntity();
 
         // Пропускаем сущности, для которых не были загружены файлы
-        if( !in_array( get_class($curEntity), array_keys($this->files) ) ) return;
+        if( !in_array( spl_object_hash($curEntity), array_keys($this->files) ) ) return;
 
         $pathResolver = $this->container->get('itm.file.preview.path.resolver');
         $uploadPath = $pathResolver->getUploadPath($curEntity);
@@ -166,7 +166,7 @@ class FileSubscriber implements EventSubscriber
             echo "An error occurred while creating your directory at ".$e->getPath();
         }
 
-        $files = $this->files[get_class($curEntity)];
+        $files = $this->files[spl_object_hash($curEntity)];
         foreach( $files as $field => $file )
         {
             if( $file instanceof UploadedFile )
