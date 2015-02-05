@@ -77,7 +77,7 @@ class FileSubscriber implements EventSubscriber
                         $filename = $accessor->getValue( $curEntity, $fieldName );
                         if($filename)
                         {
-                            $this->oldFiles[$entityClass][$fieldName] = $filename;
+                            $this->oldFiles[spl_object_hash($curEntity)][$fieldName] = $filename;
                         }
                     }
                 }
@@ -120,10 +120,10 @@ class FileSubscriber implements EventSubscriber
                             $filename = sha1(uniqid(mt_rand(), true)) . '.' . $file->guessExtension();
                             $accessor->setValue( $curEntity, $fieldName, $filename );
                         }
-                        elseif(!empty($this->oldFiles[$entityClass][$fieldName]))
+                        elseif(!empty($this->oldFiles[spl_object_hash($curEntity)][$fieldName]))
                         {
                             // Сохраняем старое имя файла
-                            $accessor->setValue( $curEntity, $fieldName, $this->oldFiles[$entityClass][$fieldName] );
+                            $accessor->setValue( $curEntity, $fieldName, $this->oldFiles[spl_object_hash($curEntity)][$fieldName] );
                         }
                     }
                 }
@@ -175,9 +175,9 @@ class FileSubscriber implements EventSubscriber
                 $fs->copy( $file->getPathname(), $pathResolver->getPath($curEntity, $field) );
 
                 // Удаляем старый файл
-                if( !empty($this->oldFiles[get_class($curEntity)][$field]) )
+                if( !empty($this->oldFiles[spl_object_hash($curEntity)][$field]) )
                 {
-                    $oldFilePath = $pathResolver->getPath( $curEntity, $this->oldFiles[get_class($curEntity)][$field] );
+                    $oldFilePath = $pathResolver->getPath( $curEntity, $this->oldFiles[spl_object_hash($curEntity)][$field] );
                     if( $fs->exists($oldFilePath) ) $fs->remove( $oldFilePath );
                 }
             }
