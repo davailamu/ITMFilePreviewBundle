@@ -77,7 +77,7 @@ class FileSubscriber implements EventSubscriber
                         $filename = $accessor->getValue( $curEntity, $fieldName );
                         if($filename)
                         {
-                            $this->oldFiles[$entityClass][$fieldName] = $filename;
+                            $this->oldFiles[$entityClass][$fieldName][spl_object_hash($curEntity)] = $filename;
                         }
                     }
                 }
@@ -117,10 +117,10 @@ class FileSubscriber implements EventSubscriber
                             $filename = sha1(uniqid(mt_rand(), true)) . '.' . $file->guessExtension();
                             $accessor->setValue( $curEntity, $fieldName, $filename );
                         }
-                        elseif(!empty($this->oldFiles[$entityClass][$fieldName]))
+                        elseif(!empty($this->oldFiles[$entityClass][$fieldName][spl_object_hash($curEntity)]))
                         {
                             // Сохраняем старое имя файла
-                            $accessor->setValue( $curEntity, $fieldName, $this->oldFiles[$entityClass][$fieldName] );
+                            $accessor->setValue( $curEntity, $fieldName, $this->oldFiles[$entityClass][$fieldName][spl_object_hash($curEntity)] );
                         }
                     }
                 }
@@ -177,8 +177,8 @@ class FileSubscriber implements EventSubscriber
                     $fs->copy($file->getPathname(), $pathResolver->getPath($curEntity, $field));
 
                     // Удаляем старый файл
-                    if (!empty($this->oldFiles[get_class($curEntity)][$field])) {
-                        $oldFilePath = $pathResolver->getPath($curEntity, $this->oldFiles[get_class($curEntity)][$field]);
+                    if (!empty($this->oldFiles[get_class($curEntity)][$field][spl_object_hash($curEntity)])) {
+                        $oldFilePath = $pathResolver->getPath($curEntity, $this->oldFiles[get_class($curEntity)][$field][spl_object_hash($curEntity)]);
                         if ($fs->exists($oldFilePath)) $fs->remove($oldFilePath);
                     }
                 }
