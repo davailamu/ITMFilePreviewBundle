@@ -42,9 +42,8 @@ Add to twig configuration fields templates in `config.yml`
     # app/config/config.yml
 
     twig:
-        form:
-            resources:
-                - 'ITMFilePreviewBundle:Form:fields.html.twig'
+        form_themes:
+            - 'ITMFilePreviewBundle:Form:fields.html.twig'
 ```
 
 Add in `AppKernel.php`
