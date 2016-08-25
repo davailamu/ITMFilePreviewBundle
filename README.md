@@ -15,7 +15,7 @@ First you need to add `itm/file-preview-bundle` to `composer.json`:
 	},
 	"repositories": [{
             "type": "vcs",
-            "url": "http://gitlab.itmclient.com/symfony-bundles/itmfilepreviewbundle.git"
+            "url": "https://github.com/archer-developer/ITMFilePreviewBundle.git"
         }
 	
 
