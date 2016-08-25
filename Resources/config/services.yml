@@ -1,22 +1,22 @@
 services:
    itm.file.preview.subscriber:
       class: ITM\FilePreviewBundle\EventListener\FileSubscriber
-      arguments: [@service_container]
+      arguments: ['@service_container']
       tags:
           - { name: doctrine.event_subscriber }
 
    itm.file.preview.path.resolver:
        class: ITM\FilePreviewBundle\Resolver\PathResolver
-       arguments: [@service_container]
+       arguments: ['@service_container']
 
    itm.file.preview.form_file_type:
        class: ITM\FilePreviewBundle\Form\Type\FilePreviewType
-       arguments: [@service_container]
+       arguments: ['@service_container']
        tags:
            - { name: form.type, alias: itm_file_preview }
 
    itm.file.preview.twig_extension:
       class: ITM\FilePreviewBundle\Twig\Extension\FilePreviewExtension
-      arguments: [@itm.file.preview.path.resolver, @service_container]
+      arguments: ['@itm.file.preview.path.resolver', '@service_container']
       tags:
            - { name: twig.extension }
