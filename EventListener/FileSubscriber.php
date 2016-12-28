@@ -154,14 +154,7 @@ class FileSubscriber implements EventSubscriber
         $uploadPath = $pathResolver->getUploadPath($curEntity);
 
         $fs = new Filesystem();
-        try
-        {
-            $fs->mkdir($uploadPath);
-        }
-        catch (IOExceptionInterface $e)
-        {
-            echo "An error occurred while creating your directory at ".$e->getPath();
-        }
+        $fs->mkdir($uploadPath);
 
         $entities = $this->files[get_class($curEntity)];
         foreach( $entities as $files )
@@ -177,10 +170,13 @@ class FileSubscriber implements EventSubscriber
                     $fs->copy($file->getPathname(), $pathResolver->getPath($curEntity, $field));
 
                     // Удаляем старый файл
-                    if (!empty($this->oldFiles[get_class($curEntity)][$field][spl_object_hash($curEntity)])) {
-                        $oldFilePath = $pathResolver->getPath($curEntity, $field);  
-                        if ($fs->exists($oldFilePath)) $fs->remove($oldFilePath);
-                        
+                    $oldFilename = $this->oldFiles[get_class($curEntity)][$field][spl_object_hash($curEntity)];
+                    if (!empty($oldFilename)) {
+                        $oldFilePath = $pathResolver->getUploadPath($curEntity) . DIRECTORY_SEPARATOR . $oldFilename;
+                        if ($fs->exists($oldFilePath)){
+                            $fs->remove($oldFilePath);
+                        }
+
                         unset($this->oldFiles[get_class($curEntity)][$field][spl_object_hash($curEntity)]);
                     }
                 }

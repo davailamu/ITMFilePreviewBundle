@@ -48,6 +48,7 @@ class PathResolver
      *
      * @param $entity - сущность
      * @param $field - имя поля сущности или имя файла (значение поля)
+     * @param bool $relative - генерировать относительный путь
      * @return string
      */
     public function getPath($entity, $field, $relative = false)
