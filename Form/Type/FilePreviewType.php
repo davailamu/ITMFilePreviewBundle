@@ -42,11 +42,16 @@ class FilePreviewType extends AbstractType
 
     public function getParent()
     {
-        return FileType::class;
+        return (intval(Kernel::VERSION[0]) >= 3) ? FileType::class : 'file';
     }
 
     public function getBlockPrefix()
     {
         return 'itm_file_preview';
+    }
+
+    public function getName()
+    {
+        return $this->getBlockPrefix();
     }
 } 
