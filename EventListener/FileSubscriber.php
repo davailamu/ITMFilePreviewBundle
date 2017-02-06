@@ -75,6 +75,7 @@ class FileSubscriber implements EventSubscriber
                     {
                         // Получаем имя файла и сохраняем в subscriber
                         $filename = $accessor->getValue( $curEntity, $fieldName );
+
                         if($filename)
                         {
                             $this->oldFiles[$entityClass][$fieldName][spl_object_hash($curEntity)] = $filename;
@@ -119,8 +120,24 @@ class FileSubscriber implements EventSubscriber
                         }
                         elseif(!empty($this->oldFiles[$entityClass][$fieldName][spl_object_hash($curEntity)]))
                         {
-                            // Сохраняем старое имя файла
-                            $accessor->setValue( $curEntity, $fieldName, $this->oldFiles[$entityClass][$fieldName][spl_object_hash($curEntity)] );
+                            if($file === false) {
+                                $accessor->setValue($curEntity, $fieldName, null);
+                                $pathResolver = $this->container->get('itm.file.preview.path.resolver');
+                                $uploadPath = $pathResolver->getUploadPath($curEntity);
+
+                                $fs = new Filesystem();
+                                $fs->mkdir($uploadPath);
+
+                                $oldFilename = $this->oldFiles[$entityClass][$fieldName][spl_object_hash($curEntity)];
+                                $oldFilePath = $pathResolver->getUploadPath($curEntity) . DIRECTORY_SEPARATOR . $oldFilename;
+                                if ($fs->exists($oldFilePath)){
+                                    $fs->remove($oldFilePath);
+                                }
+                            }
+                            else {
+                                // Сохраняем старое имя файла
+                                $accessor->setValue($curEntity, $fieldName, $this->oldFiles[$entityClass][$fieldName][spl_object_hash($curEntity)]);
+                            }
                         }
                     }
                 }
