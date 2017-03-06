@@ -3,7 +3,7 @@
         <link rel="stylesheet" href="{{ asset('bundles/itmfilepreview/css/styles.css') }}"/>
         {% if form.parent.vars.value|itm_file_exists(form.vars.name) %}
         <div class="itm_file_preview_ico_c">
-            <a href="{{ form.parent.vars.value|itm_file_url(form.vars.name) }}">
+            <a href="{{ form.parent.vars.value|itm_file_url(form.vars.name) }}" target="{{ form.vars.link_target }}">
                 <img src="{{ asset('bundles/itmfilepreview/images/file.png') }}" />
             </a>
         </div>
