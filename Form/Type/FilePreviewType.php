@@ -14,6 +14,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FilePreviewType extends AbstractType
 {
@@ -22,6 +23,13 @@ class FilePreviewType extends AbstractType
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+    }
+    
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'link_target' => '',
+        ));
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options)
@@ -37,6 +45,7 @@ class FilePreviewType extends AbstractType
 
             $view->vars['info'] = stat($filePath);
             $view->vars['info']['mime'] = mime_content_type($filePath);
+            $view->vars['link_target'] = $options['link_target'];
         }
     }
 
