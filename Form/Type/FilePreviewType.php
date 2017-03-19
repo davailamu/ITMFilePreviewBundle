@@ -29,6 +29,7 @@ class FilePreviewType extends AbstractType
     {
         $resolver->setDefaults(array(
             'link_target' => '',
+            'data_class' => null,
         ));
     }
 
