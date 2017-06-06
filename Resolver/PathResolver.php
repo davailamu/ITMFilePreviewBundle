@@ -82,7 +82,9 @@ class PathResolver
             if(empty($field)) return '';
         }
 
-        return $config['upload_url'] . '/' . str_replace("\\", "/", get_class($entity)) . '/' . $field;
+        $entityClassName = ClassUtils::getRealClass(get_class($entity));
+
+        return $config['upload_url'] . '/' . str_replace("\\", "/", $entityClassName) . '/' . $field;
     }
 
     /**
