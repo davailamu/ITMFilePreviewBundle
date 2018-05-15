@@ -28,6 +28,7 @@ class Configuration implements ConfigurationInterface
             ->children()
             ->variableNode('upload_path')->end()
             ->variableNode('upload_url')->end()
+            ->variableNode('save_old_file')->defaultValue(false)->end()
             ->arrayNode('entities')
                 ->prototype('array')
                     ->beforeNormalization()

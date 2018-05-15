@@ -187,7 +187,7 @@ class FileSubscriber implements EventSubscriber
                     $fs->copy($file->getPathname(), $pathResolver->getPath($curEntity, $field));
 
                     // Удаляем старый файл
-                    if(!empty($this->oldFiles[get_class($curEntity)][$field][spl_object_hash($curEntity)])){
+                    if(!empty($this->oldFiles[get_class($curEntity)][$field][spl_object_hash($curEntity)]) && !$this->config['save_old_file']){
                         $oldFilename = $this->oldFiles[get_class($curEntity)][$field][spl_object_hash($curEntity)];
                         $oldFilePath = $pathResolver->getUploadPath($curEntity) . DIRECTORY_SEPARATOR . $oldFilename;
                         if ($fs->exists($oldFilePath)){
