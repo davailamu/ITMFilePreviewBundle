@@ -6,8 +6,9 @@ services:
           - { name: doctrine.event_subscriber }
 
    itm.file.preview.path.resolver:
-       class: ITM\FilePreviewBundle\Resolver\PathResolver
-       arguments: ['@service_container']
+         class: ITM\FilePreviewBundle\Resolver\PathResolver
+         arguments: ['@service_container']
+         public: true
 
    itm.file.preview.form_file_type:
        class: ITM\FilePreviewBundle\Form\Type\FilePreviewType

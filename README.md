@@ -30,6 +30,7 @@ Add File preview bundle configurations in `config.yml`
     itm_file_preview:
         upload_path: # Upload path in web folder for example uploads
         upload_url:  # Url access to upload folder
+        public_dir:  # Default value "web"
         save_old_file: # true/false to save file in storage after uploading a new one
         entities:    # Array of entities
             ITMNewsBundle:  # Bundle name
