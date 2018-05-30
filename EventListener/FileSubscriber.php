@@ -120,6 +120,7 @@ class FileSubscriber implements EventSubscriber
                         }
                         elseif(!empty($this->oldFiles[$entityClass][$fieldName][spl_object_hash($curEntity)]))
                         {
+                            // Если старый файл должен быть удален
                             if($file === false) {
                                 $accessor->setValue($curEntity, $fieldName, null);
                                 $pathResolver = $this->container->get('itm.file.preview.path.resolver');
@@ -134,8 +135,8 @@ class FileSubscriber implements EventSubscriber
                                     $fs->remove($oldFilePath);
                                 }
                             }
-                            else {
-                                // Сохраняем старое имя файла
+                            elseif (empty($file)) {
+                                // Сохраняем старое имя файла, если новый файл или имя файла не были загружены
                                 $accessor->setValue($curEntity, $fieldName, $this->oldFiles[$entityClass][$fieldName][spl_object_hash($curEntity)]);
                             }
                         }
