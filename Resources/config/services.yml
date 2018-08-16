@@ -20,3 +20,9 @@ services:
       arguments: ['@itm.file.preview.path.resolver', '@service_container']
       tags:
            - { name: twig.extension }
+
+   itm.file.preview.validator.required_file:
+      class: ITM\FilePreviewBundle\Validator\Constraints\RequiredFileValidator
+      arguments: ['@doctrine.orm.entity_manager']
+      tags:
+          - { name: validator.constraint_validator }

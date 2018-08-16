@@ -79,5 +79,21 @@ Add type in form. For example, if you use SonataAdminBundle, set in Admin class 
     }
 ```
 
+From Symfony version >=2.8 you can use validation annotation to ensure that file was uploaded
+```
+    // ...
+    use ITM\FilePreviewBundle\Validator\Constraints as ItmAssert;
+    
+    class News
+    {
+        // You must use `RequiredFile` assert instead of standard `NotBlank`
+
+        /**
+         * @ItmAssert\RequiredFile()
+         */
+        private $attachment;
+    }
+```
+
 Enjoy!
 ======
