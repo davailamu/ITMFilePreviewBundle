@@ -164,7 +164,8 @@ class FileSubscriber implements EventSubscriber
     private function upload(LifecycleEventArgs $args)
     {
         $curEntity = $args->getEntity();
-
+        $enKey = get_class($curEntity);
+        
         // Пропускаем сущности, для которых не были загружены файлы
         if( !in_array( get_class($curEntity), array_keys($this->files) ) ) return;
 
@@ -173,9 +174,8 @@ class FileSubscriber implements EventSubscriber
 
         $fs = new Filesystem();
         $fs->mkdir($uploadPath);
-
-        $entities = $this->files[get_class($curEntity)];
-        foreach( $entities as $files )
+        
+        foreach($this->files[$enKey] as $key => $files)
         {
             $entity = $files['entity'];
             if($entity !== $curEntity) continue;
@@ -199,6 +199,7 @@ class FileSubscriber implements EventSubscriber
                     }
                 }
             }
+            unset($this->files[$enKey][$key]);
         }
     }
 } 
