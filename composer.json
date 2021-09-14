@@ -2,6 +2,9 @@
     "name": "itm/file-preview-bundle",
     "description": "Bundle for upload files",
     "type" : "symfony-bundle",
+    "require": {
+        "twig/extensions": "*"
+    },
     "license": "proprietary",
     "authors": [
         {
